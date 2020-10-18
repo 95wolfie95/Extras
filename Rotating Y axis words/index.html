@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rotating words</title>
+    <script type="text/javascript" src="https://unpkg.com/jquery@3.5.1/dist/jquery.js"></script>
+</head>
+<body>
+    <style>
+        * {
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+        }
+
+        .quotes-area {
+            background: white !important;
+            max-height: 100vh;
+            overflow: hidden;
+        }
+
+        .main_box {
+            position: absolute;   
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .outer_box {
+            width: 80vw !important;
+            position: relative;
+            transform: perspective(2000px) rotateX(0deg);
+            transform-style: preserve-3d;
+            transition: all 10s ease-out;
+        }
+
+        .in_box {
+            width: 100%;
+            position: absolute;
+            background: white !important;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            padding-top: 4rem;
+            padding-bottom: 4rem;
+        }
+
+        .in_box div {
+            margin: 0;
+            padding: 2.5px;
+            text-align: center;
+            color: black;
+        }
+
+        .quote {
+            text-align: center;
+            font-size: 0.9rem;
+            padding: 1rem;
+        }
+
+        .author {
+            text-align: center;
+            font-style: italic;
+            font-size: 1.1rem;
+        }
+
+        .in_box:nth-child(1) { transform: rotateX(0deg) translateZ(300px) }
+        .in_box:nth-child(2) { transform: rotateX(30deg) translateZ(300px) }
+        .in_box:nth-child(3) { transform: rotateX(60deg) translateZ(300px) }
+        .in_box:nth-child(4) { transform: rotateX(90deg) translateZ(300px) }
+        .in_box:nth-child(5) { transform: rotateX(120deg) translateZ(300px) }
+        .in_box:nth-child(6) { transform: rotateX(150deg) translateZ(300px) }
+        .in_box:nth-child(7) { transform: rotateX(180deg) translateZ(300px) }
+        .in_box:nth-child(8) { transform: rotateX(210deg) translateZ(300px) }
+        .in_box:nth-child(9) { transform: rotateX(240deg) translateZ(300px) }
+        .in_box:nth-child(10) { transform: rotateX(270deg) translateZ(300px) }
+        .in_box:nth-child(11) { transform: rotateX(300deg) translateZ(300px) }
+        .in_box:nth-child(12) { transform: rotateX(330deg) translateZ(300px) }
+    </style>
+     <div class="quotes-area">
+        <div class="main_box">
+            <div class="outer_box" id="quotes_box">
+                <div class="in_box">
+                    <div class="quote">
+                        
+                    </div>
+                    <div class="author"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        let counter = 0;
+
+        const quotes = [
+            {
+                quote: "I am seeking. I am striving. I am in it with all my heart",
+                author: "Vincent van Gogh",
+            }, {
+                quote: "Creativity takes courage",
+                author: "Henri Matisse",
+            }, {
+                quote: "If I could say it in words there would be no reason to paint",
+                author: "Edward Hopper",
+            }, {
+                quote: "They always say time changes things, but you actually have to change them yourself",
+                author: "Andy Warhol",
+            }, {
+                quote: "Art washes away from the soul the dust of everyday life",
+                author: "Pablo Picasso",
+            }, {
+                quote: "Great art picks up where nature ends",
+                author: "Marc Chagall",
+            }, {
+                quote: "The position of the artist is humble. He is essentially a channel",
+                author: "Piet Mondrian",
+            }, {
+                quote: "Those who do not want to imitate anything, produce nothing",
+                author: "Salvador Dali",
+            }, {
+                quote: "The job of the artist is always to deepen the mystery",
+                author: " Francis Bacon",
+            }, {
+                quote: "To create one’s own world takes courage",
+                author: "Georgia O’Keeffe",
+            }, {
+                quote: "The object of art is not to reproduce reality, but to create a reality of the same intensity",
+                author: "Alberto Giacometti",
+            }, {
+                quote: "The main thing is to be moved, to love, to hope, to tremble, to live",
+                author: " Auguste Rodin",
+            }, {
+                quote: "It is important to express oneself...provided the feelings are real and are taken from you own experience",
+                author: "Berthe Morisot",
+            }, {
+                quote: "To be an artist is to believe in life",
+                author: "Henry Moore",
+            }, {
+                quote: "Every good painter paints what he is",
+                author: "Jackson Pollock",
+            }, {
+                quote: "Art is not what you see, but what you make others see",
+                author: "Edgar Degas",
+            }, {
+                quote: "In art, the hand can never execute anything higher than the heart can imagine",
+                author: "Ralph Waldo Emerson",
+            }, {
+                quote: "Whether you succeed or not is irrelevant, there is no such thing.  Making your unknown known is the important thing",
+                author: "Georgia O’Keeffe",
+            }, {
+                quote: "What moves men of genius, or rather what inspires their work, is not new ideas, but their obsession with the idea that what has already been said is still not enough",
+                author: "Eugene Delacroi",
+            }, {
+                quote: "Art must be an expression of love or it is nothing",
+                author: "Marc Chagall",
+            }, {
+                quote: "Don't be an art critic, but paint. There lies salvation",
+                author: "Paul Cezanne",
+            }, {
+                quote: "Life obliges me to do something, so I paint",
+                author: "Rene Magritte",
+            }, {
+                quote: "If I create from the heart, nearly everything works; if from the head, almost nothing",
+                author: "Marc Chagall",
+            }, {
+                quote: "I found I could say things with color and shapes that I couldn't say any other way - things I had no words for",
+                author: "Georgia O'Keeffe",
+            }, {
+                quote: "The artist is a receptacle for emotions that come from all over the place: from the sky, from the earth, from a scrap of paper, from a passing shape, from a spider’s web",
+                author: "Pablo Picasso",
+            }, {
+                quote: "A Good artist has less time than ideas",
+                author: "Martin Kippenberger",
+            }, {
+                quote: "Don’t think about making art, just get it done.  Let everyone else decide if it’s good or bad, whether they love it or hate it.  While they are deciding, make even more art",
+                author: "Andy Warhol",
+            }, {
+                quote: "I never paint dreams or nightmares. I paint my own reality",
+                author: "Frida Kahlo",
+            }, {
+                quote: "I paint for myself. I don't know how to do anything else, anyway. Also I have to earn my living, and occupy myself",
+                author: "Francis Bacon",
+            }, {
+                quote: "A work of art which did not begin in emotion is not art",
+                author: "Paul Cezanne",
+            }, {
+                quote: "Have no fear of perfection, you'll never reach it",
+                author: "Salvador Dali",
+            }, {
+                quote: "The longer you look at an object, the more abstract it becomes, and, ironically, the more real",
+                author: "Lucian Freud",
+            }, {
+                quote: "There is no must in art because art is free",
+                author: "Wassily Kandinsky",
+            }, {
+                quote: "Poor is the pupil who does not surpass his master",
+                author: "Leonardo da Vinci",
+            }, {
+                quote: "If people knew how hard I worked to get my mastery, it wouldn't seem so wonderful at all",
+                author: "Michelangelo",
+            }, {
+                quote: "Colour is my day-long obsession, joy and torment",
+                author: "Claude Monet",
+            }, {
+                quote: "Nature is not only all that is visible to the eye.. it also includes the inner pictures of the soul",
+                author: "Edvard Munch",
+            }, {
+                quote: "Painting is a means of self-enlightenment",
+                author: "John Olsen",
+            }, {
+                quote: "I don't say everything, but I paint everything",
+                author: "Pablo Picasso",
+            }, {
+                quote: "The only time I feel alive is when I'm painting",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "The holy grail is to spend less time making the picture than it takes people to look at it",
+                author: "Banksy",
+            }, {
+                quote: "Art is the only way to run away without leaving home",
+                author: "Twyla Tharp",
+            }, {
+                quote: "An artist cannot fail; it is a success to be one",
+                author: "Charles Horton Cooley",
+            }, {
+                quote: "There's no retirement for an artist, it's your way of living so there's no end to it",
+                author: "Henry Moore",
+            }, {
+                quote: "One can have no smaller or greater mastery than mastery of oneself",
+                author: "Leonardo da Vinci",
+            }, {
+                quote: "An artist never really finishes his work; he merely abandons it",
+                author: "Paul Valéry",
+            }, {
+                quote: "The aim of art is to represent not the outward appearance of things, but their inward significance",
+                author: "Aristotle",
+            }, {
+                quote: "No great artist ever sees things as they really are. If he did, he would cease to be an artist",
+                author: "Oscar Wilde",
+            }, {
+                quote: "Painting is just another way of keeping a diary",
+                author: "Pablo Picasso",
+            }, {
+                quote: "Life beats down and crushes the soul and art reminds you that you have one",
+                author: "Stella Adler",
+            }, {
+                quote: "To send light into the darkness of men's hearts - such is the duty of the artist",
+                author: " Schumann",
+            }, {
+                quote: "I want to touch people with my art. I want them to say 'he feels deeply, he feels tenderly",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "Painting is poetry that is seen rather than felt, and poetry is painting that is felt rather than seen",
+                author: "Leonardo da Vinci",
+            }, {
+                quote: "Art is a lie that makes us realize truth",
+                author: "Pablo Picasso",
+            }, {
+                quote: "I saw the angel in the marble and carved until I set him free",
+                author: "Michelangelo",
+            }, {
+                quote: "For me, painting is a way to forget life.  It is a cry in the night, a strangled laugh",
+                author: "Georges Rouault",
+            }, {
+                quote: "Art is the stored honey of the human soul",
+                author: "Theodore Dreiser",
+            }, {
+                quote: "An artist is not paid for his labor but for his vision",
+                author: "James McNeill Whistler",
+            }, {
+                quote: "Great things are done by a series of small things brought together",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "Creativity is allowing yourself to make mistakes. Art is knowing which ones to keep",
+                author: "Scott Adams",
+            }, {
+                quote: "Painting is easy when you don't know how, but very difficult when you do",
+                author: "Edgar Degas",
+            }, {
+                quote: "Inspiration does exist but it must find you working",
+                author: "Pablo Picasso",
+            }, {
+                quote: "The emotions are sometimes so strong that I work without knowing it. The strokes come like speech",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "The artist's world is limitless.  It can be found anywhere, far from where he lives or a few feet away.  It is always on his doorstep",
+                author: "Paul Strand",
+            }, {
+                quote: "It's not what you look at that matters, it's what you see",
+                author: "Henry David Thoreau",
+            }, {
+                quote: "Be who you are and say what you feel because those who mind don't matter and those who matter don't mind",
+                author: "Dr Suess",
+            }, {
+                quote: "There are painters who transform the sun into a yellow spot, but there are others who, thanks to their art and intelligence, transform a yellow spot into the sun",
+                author: "Pablo Picasso",
+            }, {
+                quote: "It is not the language of painters but the language of nature which one should listen to, the feeling for the things themselves, for reality, is more important than the feeling for pictures",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "If a man devotes himself to art, much evil is avoided that happens otherwise if one is idle",
+                author: "Albrecht Durer",
+            }, {
+                quote: "It took me four years to paint like Raphael, but a lifetime to paint like a child",
+                author: "Pablo Picasso",
+            }, {
+                quote: "I wish they would only take me as I am",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "Painting is the grandchild of nature. It is related to God",
+                author: "Rembrandt",
+            }, {
+                quote: "Art is never finished, only abandoned",
+                author: "Leonardo Da Vinci",
+            }, {
+                quote: "To practice any art, no matter how well or badly, is a way to make your soul grow. So do it",
+                author: "Kurt Vonnegut",
+            }, {
+                quote: "It is a widely accepted notion among painters that it does not matter what one paints as long as it is well painted. This is the essence of academicism. There is no such thing as good painting about nothing",
+                author: "Mark Rothko",
+            }, {
+                quote: "Art, undeniably, is conductive to happiness",
+                author: "unknown",
+            }, {
+                quote: "Love always brings difficulties, that is true, but the good side of it is that it gives energy",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "Every child is an artist. The problem is how to remain an artist once he grows up",
+                author: "Pablo Picasso",
+            }, {
+                quote: "Everything has its beauty, but not everyone sees it",
+                author: "Andy Warhol",
+            }, {
+                quote: "The greater the artist, the greater the doubt. Perfect confidence is granted to the less talented as a consolation prize",
+                author: "Robert Hughes",
+            }, {
+                quote: "If you ask me what I came to do in this world, I, an artist, will answer you: I am here to live out loud",
+                author: "Émile Zola",
+            }, {
+                quote: "I dream of painting and then I paint my dream",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "The world of reality has its limits; the world of imagination is boundless",
+                author: "Jean-Jacques Rousseau",
+            }, {
+                quote: "A painting is never finished - it simply stops in interesting places",
+                author: "Paul Gardner",
+            }, {
+                quote: "A great artist is always before his time or behind it",
+                author: "George Moore",
+            }, {
+                quote: "As practice makes perfect, I cannot but make progress; each drawing one makes, each study one paints, is a step forward",
+                author: "Vincent van Gogh",
+            }, {
+                quote: "Do not fear mistakes - there are none",
+                author: "Miles David",
+            }, {
+                quote: "A man paints with his brains and not with his hands",
+                author: "Michelangelo",
+            }, {
+                quote: "In our time there are many artists who do something because it is new; they see their value and their justification in this newness. They are deceiving themselves; novelty is seldom the essential. This has to do with one thing only; making a subject better from its intrinsic nature",
+                author: "Henri de Toulouse Lautrec",
+            }, {
+                quote: "You come to nature with all her theories, and she knocks them all flat",
+                author: "Pierre Auguste Renoir",
+            }, {
+                quote: "The emotions are sometimes so strong that I work without knowing it. The strokes come like speech",
+                author: "Vincent Van Gogh",
+            }, {
+                quote: "If I were called upon to define briefly the word Art, I should call it the reproduction of what the senses preceive in nature, seen through the veil of the soul",
+                author: "Paul Cezanne",
+            }, {
+                quote: "If you always do what you always did - you'll always get what you always got",
+                author: "Unknown",
+            }, {
+                quote: "Life is the art of drawing without an eraser",
+                author: "John W. Gardner",
+            }, {
+                quote: "The object isn’t to make art, it’s to be in that wonderful state which makes art inevitable",
+                author: "Robert Henri",
+            }, {
+                quote: "Art is a collaboration between God and the artist, and the less the artist does the better",
+                author: "Andre Gide",
+            }, {
+                quote: "I invent nothing, I rediscover",
+                author: "Auguste Rodin",
+            }, {
+                quote: "I would rather die of passion than of boredom",
+                author: "Vincent van Gogh",
+            }, {
+                quote: "Every artist dips his brush in his own soul, and paints his own nature into his pictures",
+                author: "Henry Ward Beecher",
+            },
+        ]
+
+       soloRollUp = () => {
+            setInterval(() => {
+                counter += 2;
+                $(".outer_box").css({"transition": "1s"})
+                $(".outer_box").css({"transform": "perspective(2000px) rotateX(" + counter +  "0deg)"})
+            }, 4000);
+        }
+
+        soloRollUp();
+
+        const quotes_box = document.getElementById("quotes_box");
+        let id = 0;
+        quotes.forEach(f_quote => {
+            id++;
+            let box_div = document.createElement("div");
+            let quote_div = document.createElement("div");
+            let author_div = document.createElement("div");
+            box_div.classList.add("in_box");
+            box_div.id = id;
+            quote_div.classList.add("quote");
+            quote_div.innerText = f_quote.quote;
+            box_div.appendChild(quote_div);
+            author_div.classList.add("author");
+            author_div.innerText = f_quote.author;
+            box_div.appendChild(author_div);
+
+            quotes_box.appendChild(box_div);
+        })
+
+        const quotes_boxes = document.querySelectorAll(".in_box");
+        for (let i = 0; i < quotes_boxes.length; i++) {
+            if (quotes_boxes[i].id == "") {
+                quotes_boxes[i].style.display = "none";
+            }
+        }
+
+    </script>
+</body>
+</html>
